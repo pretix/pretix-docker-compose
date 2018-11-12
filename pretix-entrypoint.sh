@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+./write-settings.sh
+
 echo "Sleep 30 sec: Avoid racecondition with db"
 sleep 15s
 python3 manage.py compilemessages

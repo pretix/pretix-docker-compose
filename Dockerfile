@@ -1,8 +1,17 @@
-FROM python:3.6
+FROM python:3.6-stretch
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV LC_ALL=C.UTF-8
 ENV DJANGO_SETTINGS_MODULE=production_settings
+
+ENV POSTGRES_DB=pretix
+ENV POSTGRES_USER=pretix
+ENV POSTGRES_PASSWORD=pretix
+
+ENV DJANGO_SECRET=eehucheethie1cuW7bieKooviecoFooj9yepai1Oec3aevah3f
+ENV MAIL_FROM=tickets@ChangeMeToYourPretixDomain.arpa
+ENV INSTANCE_NAME="My pretix installation"
+ENV CURRENCY=EUR
 
 RUN apt-get update \
     && apt-get install -y git libxml2-dev libxslt1-dev python-dev python-virtualenv locales \
@@ -25,9 +34,12 @@ COPY pretix/production_settings.py .
 COPY pretix .
 COPY pretix-entrypoint.sh .
 COPY task-entrypoint.sh .
+COPY write-settings.sh .
 
 RUN pip3 install -r requirements/production.txt \
     && pip3 install -r requirements/mysql.txt \
-    && pip3 install -r requirements/redis.txt
-RUN chmod +x pretix-entrypoint.sh task-entrypoint.sh \
+    && pip3 install -r requirements/redis.txt \
+    && chmod +x pretix-entrypoint.sh task-entrypoint.sh write-settings.sh \
     && chown -R www-data:www-data /pretix /etc/pretix /data /static
+
+USER www-data:www-data

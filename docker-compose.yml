@@ -1,28 +1,35 @@
 version: '3.4'
 services:
   db:
-    image: mariadb:latest
+    image: postgres:11-alpine
+    restart: always
+    container_name: db
     env_file:
-      - .dbenv
+      - env.ini
     volumes:
-      - db-data:/var/lib/mysql
+      - db-data:/var/lib/postgresql/data
     networks:
       - internal
 
   redis:
-    image: redis:latest
+    image: redis:alpine
+    restart: always
     container_name: redis
     networks:
       - internal
 
   postfix:
     build: ./postfix
+    restart: always
     container_name: postfix
     networks:
       - internal
 
   pretix:
     build: .
+    restart: always
+    env_file:
+      - env.ini
     volumes:
       - pretix-data:/data
       - static-data:/pretix/src/pretix/static.dist
@@ -31,20 +38,21 @@ services:
       - redis
       - postfix
     command: ./pretix-entrypoint.sh
-    user: www-data
     networks:
       - internal
       - external
 
   task:
     build: .
+    restart: always
+    env_file:
+      - env.ini
     volumes:
       - pretix-data:/data
       - static-data:/static
     depends_on:
       - pretix
     command: ./task-entrypoint.sh
-    user: www-data
     networks:
       - internal
 
