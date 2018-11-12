@@ -1,0 +1,22 @@
+version: '3.4'
+
+services:
+  nginx:
+    build: ./nginx
+    volumes:
+      - static-data:/static
+    depends_on:
+      - pretix
+    networks:
+      - external
+    deploy:
+      restart_policy:
+        condition: any
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+
+volumes:
+  pretix-data:
+  db-data:
+  static-data:
