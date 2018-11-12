@@ -20,7 +20,7 @@ RUN pip3 install -U pip wheel setuptools uwsgi
 WORKDIR /pretix/src
 
 COPY pretix/etc/pretix.cfg /etc/pretix/pretix.cfg
-COPY ./src_tmp .
+COPY ./src/src .
 COPY pretix/production_settings.py .
 COPY pretix .
 COPY pretix-entrypoint.sh .

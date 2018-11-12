@@ -10,7 +10,8 @@ This is a small example setup to run pretix with docker-compose.
 
 * Change the `pretix/etc/pretix.cfg` to fit your needs
 * Change the `.dbenv` to fit the `pretix.cfg`
-* Copy the content of `../../../src` into `src_tmp`
+* Git checkout including submodules `git submodule update --init --recursive`
+* If you want to build against latest master, run `git submodule update --init --recursive --remote` instead
 
 ## Run with nginx container
 
