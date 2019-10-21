@@ -1,4 +1,4 @@
 [submodule "src"]
 	path = src
-	url = git@github.com:pretix/pretix.git
+	url = https://github.com/pretix/pretix.git
 	branch = master
