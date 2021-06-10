@@ -1,4 +1,4 @@
-FROM python:3.6-stretch
+FROM python:3.8.8-slim-buster
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV LC_ALL=C.UTF-8
