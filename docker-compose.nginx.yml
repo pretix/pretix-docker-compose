@@ -1,0 +1,28 @@
+version: '3.4'
+
+services:
+  nginx:
+    build: ./nginx
+    volumes:
+      - static-data:/static
+    depends_on:
+      - pretix
+    networks:
+      - external
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost"]
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+      start_period: 5m
+
+volumes:
+  pretix-data:
+  db-data:
+  static-data:

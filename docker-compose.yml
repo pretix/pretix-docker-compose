@@ -1,0 +1,67 @@
+version: '3.4'
+services:
+  db:
+    image: postgres:11-alpine
+    restart: always
+    container_name: db
+    env_file:
+      - env.ini
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - internal
+
+  redis:
+    image: redis:alpine
+    restart: always
+    container_name: redis
+    networks:
+      - internal
+
+  postfix:
+    build: ./postfix
+    restart: always
+    container_name: postfix
+    networks:
+      - internal
+
+  pretix:
+    build: .
+    restart: always
+    env_file:
+      - env.ini
+    volumes:
+      - pretix-data:/data
+      - static-data:/pretix/src/pretix/static.dist
+    depends_on:
+      - db
+      - redis
+      - postfix
+    command: ./pretix-entrypoint.sh
+    networks:
+      - internal
+      - external
+
+  task:
+    build: .
+    restart: always
+    env_file:
+      - env.ini
+    volumes:
+      - pretix-data:/data
+      - static-data:/static
+    depends_on:
+      - pretix
+    command: ./task-entrypoint.sh
+    networks:
+      - internal
+
+
+volumes:
+  pretix-data:
+  db-data:
+  static-data:
+
+networks:
+  internal:
+  external:
