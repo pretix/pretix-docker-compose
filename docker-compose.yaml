@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  app:
+    image: pretix/standalone:stable
+    restart: unless-stopped
+    command: all
+    ports:
+      - 80:80
+    volumes:
+      - ./data/app:/data
+      - ./pretix.cfg:/etc/pretix/pretix.cfg:ro
+    depends_on:
+      - db
+      - cache
+
+  db:
+    image: postgres:14-alpine
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+
+  cache:
+    image: redis:6-alpine
+    restart: unless-stopped
